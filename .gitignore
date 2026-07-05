@@ -1,0 +1,10 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Local test artifacts / outputs
+*-nobg.png
+/tmp/
+node_modules/
