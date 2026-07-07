@@ -66,6 +66,21 @@ uvx --python 3.11 --with "numba>=0.59.1" --from "rembg[cpu,cli]" rembg i -a inpu
 uvx --python 3.11 --with "numba>=0.59.1" --from "rembg[cpu,cli]" rembg i -m isnet-general-use input.jpg output.png
 ```
 
+### Dark subjects and solid-background logos
+
+rembg does salient-object detection, so a **dark subject on a dark or solid-colour background** can come
+out with a **dark halo/fringe** at the edge - worst on JPEGs, where compression adds near-black noise
+around the subject. Two fixes, covered in full in
+[`SKILL.md`](skills/remove-background/SKILL.md#dark-subjects--solid-background-logos-when-rembg-leaves-a-halo):
+
+- **Solid background (dark or light):** colour-key the known background colour instead of guessing the
+  subject - deterministic and halo-free whenever the subject colour differs from the background. SKILL.md
+  ships a self-contained `uvx --with pillow` snippet (with a `chroma` guard so a colourful subject is
+  never erased) plus a light-background variant.
+- **Dark photos / complex subjects:** stay with rembg but try `-m isnet-general-use` and/or `-a`; if
+  rembg can't even find a very dark subject, brighten a copy, get the mask from the brightened copy, then
+  apply that alpha to the original so the subject keeps its true colours.
+
 A convenience wrapper that fills in default output names and handles folders is included at
 [`scripts/remove-bg.sh`](scripts/remove-bg.sh) for anyone who clones the repo:
 
