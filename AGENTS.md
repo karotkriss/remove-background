@@ -35,6 +35,25 @@ If a future rembg release relaxes the pymatting/numba pin so a plain `uvx rembg[
 current Python, simplify the command and update SKILL.md, README, and this file together - but verify a
 real end-to-end run first (input image -> RGBA PNG with transparent + opaque pixels).
 
+## Dark subjects: the colour-key fallback
+
+SKILL.md has a "Dark subjects & solid-background logos" section for rembg's one real failure mode: it
+does salient-object detection, so a **dark subject on a dark/solid background** comes out with a **dark
+halo** (worst on JPEGs). Reproduced on a navy-on-black JPEG: rembg kept a visible dark ring plus the
+interior black hole; the Pillow colour-key produced a clean, halo-free RGBA edge.
+
+Load-bearing facts if you touch that section:
+
+- **rembg is not broadly broken on dark images** - it handles most fine. Keep the section scoped to the
+  solid/JPEG dark-background edge case; do not overclaim.
+- **Colour-key is not a universal replacement for rembg.** It only works when the subject colour differs
+  from the background colour; on a near-black detail over a near-black background the luminance test
+  erases the detail. That is why the section keeps rembg (Fix B) for photos/complex subjects.
+- The `chroma < NEUTRAL` guard in the snippet is what stops a colourful subject from being keyed out -
+  don't drop it.
+- The colour-key snippet lives **inline in SKILL.md** (self-contained, no `scripts/` dependency), same
+  rule as the rembg command. Verify any change to it end-to-end per the section below.
+
 ## Verifying a change
 
 Prove any change to the command end-to-end, not just by reading: run it on a real image and confirm the

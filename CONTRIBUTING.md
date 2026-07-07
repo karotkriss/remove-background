@@ -19,8 +19,8 @@ conventions that keep the repository consistent.
 - The skill must stay **self-contained in `skills/remove-background/SKILL.md`**, because `npx skills add`
   copies only that file. Never add a dependency on `scripts/remove-bg.sh` or any other repo file from
   within SKILL.md; the wrapper is a clone-only convenience.
-- If you change the rembg command, update `SKILL.md`, `README.md`, and `AGENTS.md` together so they
-  never disagree.
+- If you change the rembg command or the dark-subject / colour-key guidance, update `SKILL.md`,
+  `README.md`, and `AGENTS.md` together so they never disagree.
 - **Verify end-to-end, not by inspection.** Run the changed command on a real image and confirm the
   output is a mode `RGBA` PNG with both fully transparent pixels (background gone) and opaque pixels
   (subject kept). A command that merely runs without error is not proof it removed the background.
